@@ -1,0 +1,2 @@
+# OttomanDigitalization
+Ottoman Digitalization Project 
