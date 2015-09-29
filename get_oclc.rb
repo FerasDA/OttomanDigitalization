@@ -19,6 +19,8 @@ base_url = "http://library.ohio-state.edu/search/c?SEARCH="
 print "Please enter call number file: "
 fileName = gets.chomp
 
+out_file = File.new("out.txt", "w")
+
 f = File.open(fileName, "r") 
 f.each_line do |line|
   line = line.gsub(' ', '+')
@@ -26,6 +28,7 @@ f.each_line do |line|
   agent = Mechanize.new
   page = agent.get(url)
   #get oclc number (there are two on each page)
-  puts page.links_with(:href => %r{\/search~S7\?\/o})
+  out_file.puts page.links_with(:href => %r{\/search~S7\?\/o})
 end
 f.close
+out_file.close
