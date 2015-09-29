@@ -21,10 +21,11 @@ fileName = gets.chomp
 
 f = File.open(fileName, "r") 
 f.each_line do |line|
-  # agent = Mechanize.new
   line = line.gsub(' ', '+')
   url = "#{base_url}#{line}"
-  puts url
-  # page = agent.get(url)
+  agent = Mechanize.new
+  page = agent.get(url)
+  #get oclc number (there are two on each page)
+  puts page.links_with(:href => %r{\/search~S7\?\/o})
 end
 f.close
