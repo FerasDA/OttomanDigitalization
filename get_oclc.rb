@@ -14,13 +14,17 @@ require 'rubygems'
 require 'mechanize'
 
 # Start of main 
-
+base_url = "http://library.ohio-state.edu/search/c?SEARCH="
 # Ask for call numner file
 print "Please enter call number file: "
 fileName = gets.chomp
 
 f = File.open(fileName, "r") 
 f.each_line do |line|
-  puts line
+  # agent = Mechanize.new
+  line = line.gsub(' ', '+')
+  url = "#{base_url}#{line}"
+  puts url
+  # page = agent.get(url)
 end
 f.close
