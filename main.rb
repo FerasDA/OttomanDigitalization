@@ -15,7 +15,7 @@ require 'nokogiri'
 
 
 def main
-  fileName = "test_data.txt"
+  fileName = "cl_numbers.txt"
   # open file to read from
   f = File.open(fileName, "r")
   
@@ -70,6 +70,10 @@ def main
             oclc = link.text.strip
           end
         end
+        out_file.puts oclc
+      else 
+        puts 'manual-diff'
+        oclc = 'manual-diff'
         out_file.puts oclc
       end
     end
