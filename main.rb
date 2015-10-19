@@ -12,6 +12,7 @@ File: main.rb
 
 require 'mechanize'
 require 'nokogiri'
+require 'open-uri'
 
 
 def main
