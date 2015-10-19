@@ -60,9 +60,25 @@ def main
       # if multiple records were found
       elsif resultPage.at_css("table[class='browseList']")
         # puts 'found a list, oclc for first link:'
-        puts 'manual'
-        oclc = 'manual'
-        out_file.puts oclc
+        # puts 'manual'
+        # oclc = 'manual'
+        # out_file.puts oclc
+
+        resultPage.search("td[class='browseEntryData']").each do |td|
+          if td.at_css("a[name='anchor_1']")
+            # puts td.css('a[href]')
+            page2 = agent.get td.at('a[href]')[:href]
+            # clicked and found one record
+            firstRecord = Nokogiri::HTML(page2.body)
+            puts 'found one record from list'
+            firstRecord.xpath('//a[@href]').each do |link|
+              if link['href'].include? "/search~S7?/o"
+              oclc = link.text.strip
+              end
+            end
+            out_file.puts oclc
+          end
+        end
       # if one record is found
       elsif resultPage.css("a[id='recordnum']").text.to_s.eql? "Permanent link to this record"
         puts 'found one record'
