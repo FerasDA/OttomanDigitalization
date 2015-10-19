@@ -26,23 +26,23 @@ def main
 
   # Search each record
   search_form = page.form_with :class => "unpadded"
-  search_form.field_with(:name => "SEARCH").value = "AC141 .K54 1911"
+  search_form.field_with(:name => "SEARCH").value = "AC141 .S94 1918"
 
   search_results = agent.submit search_form
 
   # Nokogiri 
   resultPage = Nokogiri::HTML(search_results.body)
-
-  # get error class
-  error = resultPage.css("tr[class='msg']")
   
   # if no matches found 
-  if error.text.to_s.eql? "No matches found; nearby LC CALL NOS are:"
+  if resultPage.css("tr[class='msg']").text.to_s.eql? "No matches found; nearby LC CALL NOS are:"
     puts 'no matches found'
-  else 
+  # if multiple records were found
+  elsif resultPage.at_css("table[class='browseList']")
     puts 'found'
+  # if on record is found
+  elsif resultPage.css("a[id='recordnum']").text.to_s.eql? "Permanent link to this record"
+    puts 'found one record'
   end
-
 end
 
 main
