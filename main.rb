@@ -20,7 +20,7 @@ def main
   f = File.open(fileName, "r")
   
   # open file to write to
-  # out_file = File.new("out.txt", "w")
+  out_file = File.new("out.txt", "w")
 
   # Initialize new Mechanize agent
   agent = Mechanize.new
@@ -33,10 +33,13 @@ def main
 
   # away to handle 429 too many requests error
   lc_record_old = ""
+  # oclc number
+  oclc = ""
   # get call numbers from file
   f.each_line do |lc_record|
     if lc_record.eql? lc_record_old
       puts 'same oclc'
+      out_file.puts oclc
     else 
       # update lc_record_old
       lc_record_old = lc_record
@@ -52,15 +55,27 @@ def main
       # if no matches found 
       if resultPage.css("tr[class='msg']").text.to_s.eql? "No matches found; nearby LC CALL NOS are:"
         puts 'no matches found'
+        out_file.puts 'no matches found'
       # if multiple records were found
       elsif resultPage.at_css("table[class='browseList']")
-        puts 'found'
-      # if on record is found
+        # puts 'found a list, oclc for first link:'
+        puts 'manual'
+        oclc = 'manual'
+        out_file.puts oclc
+      # if one record is found
       elsif resultPage.css("a[id='recordnum']").text.to_s.eql? "Permanent link to this record"
         puts 'found one record'
+        resultPage.xpath('//a[@href]').each do |link|
+          if link['href'].include? "/search~S7?/o"
+            oclc = link.text.strip
+          end
+        end
+        out_file.puts oclc
       end
     end
   end
+  f.close
+  out_file.close
 end
 
 main
